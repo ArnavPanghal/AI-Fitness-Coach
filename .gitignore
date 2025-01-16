@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Node.js
+node_modules/
+
+# OS generated files
+.DS_Store
+Thumbs.db
