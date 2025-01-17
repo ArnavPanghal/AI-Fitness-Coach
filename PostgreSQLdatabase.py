@@ -43,6 +43,19 @@ def generate_summary_report(data):
     return summary
 
 
+# Heatmap Visualization Function
+def plot_heatmap(data):
+    data_pivot = data.pivot_table(index='user_id', columns='exercise_type', values='reps_count', aggfunc='sum')
+
+    plt.figure(figsize=(10, 6))
+    sns.heatmap(data_pivot, annot=True, cmap='coolwarm', fmt='d', cbar_kws={'label': 'Total Reps'})
+    plt.title('Heatmap of Exercise Reps by User and Exercise Type')
+    plt.xlabel('Exercise Type')
+    plt.ylabel('User ID')
+    plt.tight_layout()
+    plt.show()
+
+
 # Plotting functions
 def plot_reps_trend(data):
     data['timestamp'] = pd.to_datetime(data['timestamp'])
