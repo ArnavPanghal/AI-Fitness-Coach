@@ -24,16 +24,20 @@ def connect_to_db():
 # Fetch exercise data
 def fetch_exercise_data(conn):
     query = """
-    SELECT user_id, exercise_type, reps_count, timestamp
-    FROM exercise_records
-    WHERE timestamp >= NOW() - INTERVAL '7 days'; -- Fetch last week's data
+    SELECT u.id AS user_id, u.name AS user_name, u.email AS user_email, u.age, u.weight,
+           w.date AS workout_date, w.total_calories,
+           e.exercise_name, e.sets, e.reps, e.weight AS lifted_weight,
+           m.muscle_name, m.intensity
+    FROM public.users u
+    JOIN public.workouts w ON u.id = w.user_id
+    JOIN public.exercises e ON w.id = e.workout_id
+    JOIN public.muscle_map m ON w.id = m.workout_id
     """
     try:
         return pd.read_sql(query, conn)
     except Exception as e:
         print("Error fetching data:", e)
         return None
-
 
 # Generate summary report
 def generate_summary_report(data):
