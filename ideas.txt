@@ -1,0 +1,21 @@
+Login auth
+Muscle diagram
+
+Number of exercise
+1. Phle (Start Training button)
+2. Login option
+3. Enter your exercise and number of reps to make a daily report of the person
+4. Camera Access to track person is doing correct form
+5. Provide suggested videos of correct reps
+6. Give graphical representation of weekly progress , monthly progress
+7. Creating workout plan by adding exrcise and then checkboxes
+8. Community creations for gyms.
+9. Sharing workout charts
+10. workout rept for month.(Sharing to social medias)
+
+Graph of trained model to frontend
+If form is wrong - give gemini output for that
+
+
+Admin Access
+Leaderboard -- According to global users  
