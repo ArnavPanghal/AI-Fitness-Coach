@@ -3,47 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Gym Web App</title>
+    <title>Fitness Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Gym Web App Dashboard</h1>
-        <nav>
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-        </nav>
-    </header>
-    <main>
-        <h2>Welcome, {{ current_user.id }}!</h2>
-        <section id="workout-form">
-            <h3>Log Your Workout</h3>
-            <form id="log-workout-form">
-                <div>
-                    <label for="exercise">Exercise:</label>
-                    <input type="text" id="exercise" name="exercise" required>
+    <div class="dashboard-container">
+        <header>
+            <h1>AI Fitness Coach Dashboard</h1>
+        </header>
+        
+        <div class="exercise-form">
+            <h2>Log Exercise</h2>
+            <form id="exerciseForm" class="log-exercise-form">
+                <div class="form-group">
+                    <label for="exercise_type">Exercise Type:</label>
+                    <select id="exercise_type" name="exercise_type" required>
+                        <option value="pushups">Push-ups</option>
+                        <option value="planks">Planks</option>
+                        <option value="lateral_raises">Lateral Raises</option>
+                        <option value="squats">Squats</option>
+                        <option value="lunges">Lunges</option>
+                    </select>
                 </div>
-                <div>
-                    <label for="sets">Number of Sets:</label>
-                    <input type="number" id="sets" name="sets" required min="1">
-                </div>
-                <div>
-                    <label for="reps">Number of Reps:</label>
+                <div class="form-group">
+                    <label for="reps">Reps/Duration:</label>
                     <input type="number" id="reps" name="reps" required min="1">
                 </div>
-                <div>
-                    <label for="weight">Weight (lbs):</label>
-                    <input type="number" id="weight" name="weight" required min="0" step="0.1">
+                <div class="form-group">
+                    <label for="intensity">Intensity:</label>
+                    <select id="intensity" name="intensity" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
                 </div>
-                <button type="submit" class="btn">Log Exercise</button>
+                <button type="submit" class="submit-btn">Log Exercise</button>
             </form>
-        </section>
-        <section id="progress-chart">
-            <h3>Your Progress</h3>
-            <canvas id="workoutChart"></canvas>
-        </section>
-    </main>
+            <div id="message" class="message"></div>
+        </div>
+
+        <div class="weekly-summary">
+            <h2>Weekly Summary</h2>
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>Calories Burned</h3>
+                    <p id="caloriesSummary">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-wrapper">
+                <h2>Exercise Progress</h2>
+                <canvas id="exerciseChart"></canvas>
+            </div>
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
 </body>
 </html>
