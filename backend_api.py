@@ -1,7 +1,14 @@
-from flask import Flask, jsonify, request , render_template
+from flask import Flask, jsonify, request , render_template, redirect, url_for, flash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import psycopg2
+from graph import get_exercise_progress, get_weekly_summary
+
+
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your_secret_key'  # Replace with a real secret key
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 
 # Database connection setup
 DB_CONFIG = {
@@ -11,6 +18,17 @@ DB_CONFIG = {
     "password": "Arnav@1234" # Replace with your PostgreSQL password
 }
 
+class User(UserMixin):
+    def __init__(self, id):
+        self.id = id
+
+# Dummy user database (replace with real database in production)
+users = {'user@example.com': {'password': 'password'}}
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
+
 def get_db_connection():
     """Establish a database connection."""
     connection = psycopg2.connect(**DB_CONFIG)
@@ -19,7 +37,7 @@ def get_db_connection():
 @app.route('/')
 def home():
     """Default route for API."""
-    return render_template('index.html')
+    return render_template('home.html')
 
 @app.route('/users', methods=['GET'])
 def get_users():
@@ -88,6 +106,40 @@ def get_muscle_map():
         return jsonify(muscle_map_list)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+    
+# Login and Auth
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        if email in users and users[email]['password'] == password:
+            user = User(email)
+            login_user(user)
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid email or password')
+    return render_template('login.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    weekly_summary = get_weekly_summary()
+    return render_template('dashboard.html', weekly_summary=weekly_summary)
+
+
+@app.route('/api/exercise-progress')
+def exercise_progress():
+    return jsonify(get_exercise_progress())
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
