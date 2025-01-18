@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Creations: Register Your Gym</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .form-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 1rem 0;
+            padding: 2rem;
+        }
+        .form-card h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+        .form-group input, .form-group textarea, .form-group button {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Community Creations: Register Your Gym</h1>
+        <p>Join our platform and showcase your gym to a wider audience.</p>
+    </header>
+
+    <div class="container">
+        <div class="form-card">
+            <h2>Gym Registration Form</h2>
+            <form action="/submit-gym" method="POST">
+                <div class="form-group">
+                    <label for="gym-name">Gym Name:</label>
+                    <input type="text" id="gym-name" name="gym-name" placeholder="Enter your gym's name" required>
+                </div>
+                <div class="form-group">
+                    <label for="owner-name">Owner's Name:</label>
+                    <input type="text" id="owner-name" name="owner-name" placeholder="Enter the owner's name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact Information:</label>
+                    <input type="text" id="contact" name="contact" placeholder="Enter contact number or email" required>
+                </div>
+                <div class="form-group">
+                    <label for="location">Gym Location:</label>
+                    <input type="text" id="location" name="location" placeholder="Enter the gym's address" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Gym Description:</label>
+                    <textarea id="description" name="description" placeholder="Describe your gym's facilities and specialties"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="website">Website (optional):</label>
+                    <input type="url" id="website" name="website" placeholder="Enter your gym's website URL">
+                </div>
+                <div class="form-group">
+                    <button type="submit">Register Gym</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Fitness App. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

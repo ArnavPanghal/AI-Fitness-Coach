@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Workout Charts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .form-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 1rem 0;
+            padding: 2rem;
+        }
+        .form-card h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+        .form-group input, .form-group textarea, .form-group button {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Share Workout Charts</h1>
+        <p>Upload and share workout charts to inspire others.</p>
+    </header>
+
+    <div class="container">
+        <div class="form-card">
+            <h2>Upload Workout Chart</h2>
+            <form action="/upload-chart" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="chart-name">Workout Chart Name:</label>
+                    <input type="text" id="chart-name" name="chart-name" placeholder="Enter chart name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" placeholder="Provide a brief description of the workout chart"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="upload">Upload Chart (PDF or Image):</label>
+                    <input type="file" id="upload" name="upload" accept=".pdf,.png,.jpg,.jpeg" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Share Chart</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Fitness App. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

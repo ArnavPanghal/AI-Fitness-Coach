@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fitness Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
         <header>
             <h1>AI Fitness Coach Dashboard</h1>
+            <nav class="navigation-bar">
+                <button onclick="window.location.href='{{ url_for('pushups') }}'" class="nav-btn">Push-ups</button>
+                <button onclick="window.location.href='{{ url_for('community') }}'" class="nav-btn">Community</button>
+                <button onclick="window.location.href='{{ url_for('videos') }}'" class="nav-btn">Videos</button>
+                <button onclick="window.location.href='{{ url_for('workout') }}'" class="nav-btn">Workout</button>
+            </nav>
         </header>
         
         <div class="exercise-form">
