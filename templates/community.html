@@ -6,67 +6,123 @@
     <title>Community Creations: Register Your Gym</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f9;
+            color: #333;
         }
         header {
             background-color: #4CAF50;
             color: white;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
             text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+        header p {
+            margin: 0.5rem 0 0;
+            font-size: 1rem;
+            opacity: 0.9;
         }
         .container {
-            max-width: 1200px;
-            margin: 2rem auto;
+            max-width: 900px;
+            margin: 3rem auto;
             padding: 0 1rem;
         }
         .form-card {
             background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: 1rem 0;
-            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         .form-card h2 {
             margin-bottom: 1rem;
             color: #333;
+            font-size: 1.5rem;
+            font-weight: bold;
         }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
             color: #666;
+            margin-bottom: 0.5rem;
+            display: block;
         }
-        .form-group input, .form-group textarea, .form-group button {
+        .form-group input,
+        .form-group textarea,
+        .form-group button {
             width: 100%;
-            padding: 0.5rem;
+            padding: 1rem;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
         }
         .form-group textarea {
             resize: vertical;
-            height: 100px;
+            height: 150px;
         }
         .form-group button {
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
         }
         .form-group button:hover {
             background-color: #45a049;
         }
         footer {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 3rem;
             padding: 1rem;
             background: #333;
             color: white;
+            font-size: 0.9rem;
+        }
+        /* Success message styling */
+        .success-message {
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            margin-top: 2rem;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+        .success-message span {
+            font-weight: bold;
+        }
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            header h1 {
+                font-size: 1.6rem;
+            }
+            .form-card {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -79,7 +135,7 @@
     <div class="container">
         <div class="form-card">
             <h2>Gym Registration Form</h2>
-            <form action="/submit-gym" method="POST">
+            <form id="gymRegistrationForm">
                 <div class="form-group">
                     <label for="gym-name">Gym Name:</label>
                     <input type="text" id="gym-name" name="gym-name" placeholder="Enter your gym's name" required>
@@ -108,11 +164,29 @@
                     <button type="submit">Register Gym</button>
                 </div>
             </form>
+
+            <!-- Success message section (hidden by default) -->
+            <div id="successMessage" class="success-message" style="display:none;">
+                <span>Success!</span> You have registered your gym successfully!
+            </div>
         </div>
     </div>
 
     <footer>
         <p>&copy; 2025 Fitness App. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        // Form submit event listener
+        document.getElementById("gymRegistrationForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent the form from actually submitting
+
+            // Show the success message
+            document.getElementById("successMessage").style.display = "block"; // Show success message
+    
+            // Reset the form
+            document.getElementById("gymRegistrationForm").reset();
+        });
+    </script>
 </body>
 </html>

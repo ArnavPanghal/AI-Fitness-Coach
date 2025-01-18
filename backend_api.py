@@ -23,7 +23,14 @@ class User(UserMixin):
         self.id = id
 
 # Dummy user database (replace with real database in production)
-users = {'user@example.com': {'password': 'password'}}
+# users = {'user@example.com': {'password': 'password'}}
+users = {
+    'user@example.com': {'password': 'password'},
+    'john.doe@example.com': {'password': 'johnpassword'},
+    'jane.doe@example.com': {'password': 'janepassword'},
+    'alice@example.com': {'password': 'alicepassword'},
+    'bob@example.com': {'password': 'bobpassword'}
+}
 
 @login_manager.user_loader
 def load_user(user_id):

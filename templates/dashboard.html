@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='dash.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        .reset-log-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .reset-log-btn:hover {
+            background-color: #ff1a1a;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
@@ -16,7 +31,6 @@
                 <button onclick="window.location.href='{{ url_for('pushups') }}'" class="nav-btn">Push-ups</button>
                 <button onclick="window.location.href='{{ url_for('community') }}'" class="nav-btn">Community</button>
                 <button onclick="window.location.href='{{ url_for('videos') }}'" class="nav-btn">Videos</button>
-                <button onclick="window.location.href='{{ url_for('workout') }}'" class="nav-btn">Workout</button>
             </nav>
         </header>
         
@@ -31,11 +45,21 @@
                         <option value="lateral_raises">Lateral Raises</option>
                         <option value="squats">Squats</option>
                         <option value="lunges">Lunges</option>
+                        <option value="running">Running</option>
+                        <option value="cycling">Cycling</option>
+                        <option value="burpees">Burpees</option>
+                        <option value="jumping_jacks">Jumping Jacks</option>
+                        <option value="pullups">Pull-ups</option>
+                        <option value="bench_press">Bench Press</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="reps">Reps/Duration:</label>
-                    <input type="number" id="reps" name="reps" required min="1">
+                    <label for="duration">Duration (in minutes):</label>
+                    <input type="number" id="duration" name="duration" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="reps">Reps (optional):</label>
+                    <input type="number" id="reps" name="reps" min="1">
                 </div>
                 <div class="form-group">
                     <label for="intensity">Intensity:</label>
@@ -45,19 +69,49 @@
                         <option value="high">High</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="notes">Additional Notes:</label>
+                    <textarea id="notes" name="notes" rows="3" placeholder="Add any comments about your exercise"></textarea>
+                </div>
                 <button type="submit" class="submit-btn">Log Exercise</button>
             </form>
             <div id="message" class="message"></div>
         </div>
 
+        <div class="exercise-table">
+            <h2>Exercise Log</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Exercise Type</th>
+                        <th>Duration (mins)</th>
+                        <th>Reps</th>
+                        <th>Intensity</th>
+                        <th>Notes</th>
+                        <th>Date & Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="exerciseTableBody">
+                    <!-- Data will be dynamically added here -->
+                </tbody>
+            </table>
+            <button class="reset-log-btn" onclick="resetExerciseLog()">Reset Exercise Log</button>
+        </div>
+
         <div class="weekly-summary">
-            <h2>Weekly Summary</h2>
+            <h2>Daily Summary</h2>
             <div class="summary-cards">
                 <div class="summary-card">
+                    <h3>Total Duration</h3>
+                    <p id="totalDuration">Loading...</p>
+                </div>
+                <div class="summary-card">
                     <h3>Calories Burned</h3>
-                    <p id="caloriesSummary">Loading...</p>
+                    <p id="caloriesBurned">Loading...</p>
                 </div>
             </div>
+            <button onclick="resetDailySummary()" class="reset-btn">Reset Daily Summary</button>
         </div>
 
         <div class="charts-container">
@@ -66,8 +120,187 @@
                 <canvas id="exerciseChart"></canvas>
             </div>
         </div>
+
+        <div class="sharing-buttons">
+            <h2>Share Your Workout</h2>
+            <button onclick="shareToWhatsApp()">Share to WhatsApp</button>
+            <button onclick="shareToTelegram()">Share to Telegram</button>
+            <button onclick="shareToInstagram()">Share to Instagram</button>
+            <button onclick="generateDailyReport()">Generate Daily Report</button>
+            <button onclick="exportToPDF()">Export to PDF</button>
+            <button onclick="exportToWord()">Export to Word</button>
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+    <script>
+        // Variables to track total duration and calories burned
+        let totalDuration = 0;
+        let totalCalories = 0;
+
+        // Function to update the weekly summary
+        function updateWeeklySummary() {
+            document.getElementById('totalDuration').textContent = `${totalDuration} mins`;
+            document.getElementById('caloriesBurned').textContent = `${totalCalories} kcal`;
+        }
+
+        // Function to save exercise log to local storage
+        function saveExerciseLog() {
+            const exerciseLog = document.getElementById('exerciseTableBody').innerHTML;
+            localStorage.setItem('exerciseLog', exerciseLog);
+            localStorage.setItem('totalDuration', totalDuration);
+            localStorage.setItem('totalCalories', totalCalories);
+        }
+
+        // Function to load exercise log from local storage
+        function loadExerciseLog() {
+            const exerciseLog = localStorage.getItem('exerciseLog');
+            if (exerciseLog) {
+                document.getElementById('exerciseTableBody').innerHTML = exerciseLog;
+                totalDuration = parseInt(localStorage.getItem('totalDuration')) || 0;
+                totalCalories = parseInt(localStorage.getItem('totalCalories')) || 0;
+                updateWeeklySummary();
+            }
+        }
+
+        // Function to delete a log entry
+        function deleteLogEntry(row) {
+            const duration = parseInt(row.children[1].textContent);
+            const calories = parseInt(row.children[5].textContent);
+
+            // Update total duration and total calories
+            totalDuration -= duration;
+            totalCalories -= calories;
+
+            // Remove the row from the table
+            row.remove();
+
+            // Update weekly summary display
+            updateWeeklySummary();
+
+            // Save exercise log to local storage
+            saveExerciseLog();
+        }
+
+        // Add event listener to handle form submission
+        document.getElementById('exerciseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const exerciseType = document.getElementById('exercise_type').value;
+            const duration = parseInt(document.getElementById('duration').value);
+            const reps = document.getElementById('reps').value || '-';
+            const intensity = document.getElementById('intensity').value;
+            const notes = document.getElementById('notes').value || 'None';
+            const dateTime = new Date().toLocaleString();
+
+            // Add calories burned (calculated based on exercise type and duration)
+            let calories = 0;
+            if (exerciseType === 'running') {
+                calories = duration * 8; // Running burns 8 calories per minute (example value)
+            } else if (exerciseType === 'cycling') {
+                calories = duration * 6; // Cycling burns 6 calories per minute (example value)
+            } else {
+                calories = duration * 4; // Other exercises burn 4 calories per minute (example value)
+            }
+
+            // Update total duration and total calories
+            totalDuration += duration;
+            totalCalories += calories;
+
+            // Update weekly summary display
+            updateWeeklySummary();
+
+            // Add a new row to the table
+            const tableBody = document.getElementById('exerciseTableBody');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${exerciseType}</td>
+                <td>${duration}</td>
+                <td>${reps}</td>
+                <td>${intensity}</td>
+                <td>${notes}</td>
+                <td>${dateTime}</td>
+                <td><button onclick="deleteLogEntry(this.parentElement.parentElement)">Delete</button></td>
+            `;
+            tableBody.appendChild(newRow);
+
+            // Save exercise log to local storage
+            saveExerciseLog();
+
+            // Clear the form fields
+            document.getElementById('exerciseForm').reset();
+        });
+
+        // Load exercise log from local storage on page load
+        window.onload = loadExerciseLog;
+
+        // Function to share workout to WhatsApp
+        function shareToWhatsApp() {
+            const message = `Check out my workout on AI Fitness Coach Dashboard! Total Duration: ${totalDuration} mins, Calories Burned: ${totalCalories} kcal.`;
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // Function to share workout to Telegram
+        function shareToTelegram() {
+            const message = `Check out my workout on AI Fitness Coach Dashboard! Total Duration: ${totalDuration} mins, Calories Burned: ${totalCalories} kcal.`;
+            const url = `https://t.me/share/url?url=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // Function to share workout to Instagram
+        function shareToInstagram() {
+            const message = `Check out my workout on AI Fitness Coach Dashboard! Total Duration: ${totalDuration} mins, Calories Burned: ${totalCalories} kcal.`;
+            alert('Instagram sharing is not supported directly via web. Please copy the message and share it manually: ' + message);
+        }
+
+        // Function to generate daily report
+        function generateDailyReport() {
+            const report = `Daily Report:\nTotal Duration: ${totalDuration} mins\nCalories Burned: ${totalCalories} kcal\n`;
+            alert(report);
+        }
+
+        // Function to export workout log to PDF
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text('Workout Log', 10, 10);
+            doc.autoTable({ html: '#exerciseTableBody' });
+            doc.save('workout_log.pdf');
+        }
+
+        // Function to export workout log to Word
+        function exportToWord() {
+            const table = document.getElementById('exerciseTableBody').outerHTML;
+            const blob = new Blob(['\ufeff', table], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'workout_log.doc';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Function to reset daily summary
+        function resetDailySummary() {
+            totalDuration = 0;
+            totalCalories = 0;
+            updateWeeklySummary();
+            localStorage.removeItem('totalDuration');
+            localStorage.removeItem('totalCalories');
+        }
+
+        // Function to reset exercise log
+        function resetExerciseLog() {
+            document.getElementById('exerciseTableBody').innerHTML = '';
+            totalDuration = 0;
+            totalCalories = 0;
+            updateWeeklySummary();
+            localStorage.removeItem('exerciseLog');
+            localStorage.removeItem('totalDuration');
+            localStorage.removeItem('totalCalories');
+        }
+    </script>
 </body>
 </html>

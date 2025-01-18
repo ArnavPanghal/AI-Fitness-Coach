@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import requests
 import pandas as pd
 
@@ -21,7 +20,7 @@ if response.status_code == 200:
     print("Data has been successfully saved to users_data.xlsx")
 else:
     print(f"Failed to fetch data, status code: {response.status_code}")
-=======
+
 import requests
 import pandas as pd
 
@@ -44,4 +43,3 @@ if response.status_code == 200:
     print("Data has been successfully saved to users_data.xlsx")
 else:
     print(f"Failed to fetch data, status code: {response.status_code}")
->>>>>>> 53d1005b41ab6738a62bc0aef5a367f312ed7698
